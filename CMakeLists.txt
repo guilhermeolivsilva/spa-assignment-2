@@ -13,14 +13,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fdiagnostics-color=always")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 include_directories(RangeAnalysis)
-add_library(RACli SHARED
-RangeAnalysis/RangeAnalysis.cpp
-RangeAnalysis/vSSA.cpp
-RangeAnalysis/ClientRA.cpp
-)
 
 add_library (RADeadCodeElimination SHARED
 RangeAnalysis/RangeAnalysis.cpp
 RangeAnalysis/vSSA.cpp
+RangeAnalysis/ClientRA.cpp
 RangeAnalysis/DeadCodeElimination.cpp
 )
