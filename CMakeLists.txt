@@ -18,3 +18,9 @@ RangeAnalysis/RangeAnalysis.cpp
 RangeAnalysis/vSSA.cpp
 RangeAnalysis/ClientRA.cpp
 )
+
+add_library (RADeadCodeElimination SHARED
+RangeAnalysis/RangeAnalysis.cpp
+RangeAnalysis/vSSA.cpp
+RangeAnalysis/DeadCodeElimination.cpp
+)
