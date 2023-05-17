@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Extra stuff
+.vscode/
+build/
+*.swp
+.DS_Store
