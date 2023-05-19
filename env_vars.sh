@@ -1,4 +1,4 @@
-export LLVM_PATH=/home/linuxbrew/.linuxbrew/opt/llvm@8/
-export CLANG_PATH=/home/linuxbrew/.linuxbrew/opt/llvm@8/bin/clang++
-export OPT_PATH=/home/linuxbrew/.linuxbrew/opt/llvm@8/bin/opt
+export LLVM_PATH="/home/$(whoami)/llvm/"
+export CLANG_PATH="/home/$(whoami)/llvm/build/bin/clang++"
+export OPT_PATH="/home/$(whoami)/llvm/build/bin/opt"
 export LIB_EXTENSION=so
