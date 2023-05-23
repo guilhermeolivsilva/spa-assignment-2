@@ -3,6 +3,7 @@
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/User.h"
 #include "llvm/PassAnalysisSupport.h"
 #include "llvm/Support/raw_ostream.h"
@@ -24,11 +25,14 @@ class RADeadCodeElimination : public llvm::FunctionPass {
 			InterProceduralRA < Cousot >* ra = &getAnalysis < InterProceduralRA < Cousot > >();
 			Range range1 = ra->getRange(I->getOperand(0));
 			Range range2 = ra->getRange(I->getOperand(1));
+            errs() << range1.getLower() << ' ';
+            errs() << range2.getLower() << '\n';
 			switch (I->getPredicate()){
 			case CmpInst::ICMP_SLT:
 				//This code is always true
 				if (range1.getUpper().slt(range2.getLower())) {
 					errs() << "hello from solveCmpInstruction";
+                    llvm::outs() << I << '\n';
 				}
 				break;
 			default:
@@ -45,7 +49,18 @@ class RADeadCodeElimination : public llvm::FunctionPass {
 
 		virtual bool runOnFunction(Function &F) {
 			errs() << "hello from runOnFunction\n";
-			teste();
+            llvm::ICmpInst* cmp;
+            for(Function::iterator bb = F.begin(), bbEnd = F.end();
+                bb != bbEnd; ++bb) {
+                for(BasicBlock::iterator I = bb->begin(), IEnd = bb->end(); 
+                    I != IEnd; ++I) {
+                    // if I is a conditional
+                    cmp = llvm::dyn_cast<llvm::ICmpInst>(&*I);
+                    if(cmp) {
+                        solveICmpInstruction(cmp);
+                    } 
+                }
+            }
 
 			return true;
 		}
