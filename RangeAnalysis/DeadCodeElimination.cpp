@@ -15,28 +15,23 @@
 using namespace llvm;
 
 namespace {
-class RADeadCodeElimination : public llvm::FunctionPass {
+class DeadCodeElimination : public llvm::FunctionPass {
 	private:
-		void teste() {
-			errs() << "hello from teste";
-		}
-
 		bool solveICmpInstruction(ICmpInst* I) {
 			InterProceduralRA < Cousot >* ra = &getAnalysis < InterProceduralRA < Cousot > >();
 			Range range1 = ra->getRange(I->getOperand(0));
 			Range range2 = ra->getRange(I->getOperand(1));
             errs() << range1.getLower() << ' ';
             errs() << range2.getLower() << '\n';
-			switch (I->getPredicate()){
-			case CmpInst::ICMP_SLT:
-				//This code is always true
-				if (range1.getUpper().slt(range2.getLower())) {
-					errs() << "hello from solveCmpInstruction";
-                    llvm::outs() << I << '\n';
-				}
-				break;
-			default:
-				break;
+			switch (I->getPredicate()) {
+				case CmpInst::ICMP_SLT:
+					if (range1.getUpper().slt(range2.getLower())) {
+						errs() << "hello from solveCmpInstruction";
+						llvm::outs() << I << '\n';
+					}
+					break;
+				default:
+					break;
 			}
 
 			return true;
@@ -44,8 +39,8 @@ class RADeadCodeElimination : public llvm::FunctionPass {
 
 	public:
 		static char ID;
-		RADeadCodeElimination() : FunctionPass(ID) {}
-		~RADeadCodeElimination() = default;
+		DeadCodeElimination() : FunctionPass(ID) {}
+		~DeadCodeElimination() = default;
 
 		virtual bool runOnFunction(Function &F) {
 			errs() << "hello from runOnFunction\n";
@@ -64,11 +59,16 @@ class RADeadCodeElimination : public llvm::FunctionPass {
 
 			return true;
 		}
+
+		virtual void getAnalysisUsage(AnalysisUsage &AU) const {
+			AU.setPreservesAll();
+			AU.addRequired<InterProceduralRA<Cousot>>();
+		}
 };
 }
 
-char RADeadCodeElimination::ID = 0;
-static RegisterPass<RADeadCodeElimination> X(
-	"ra-dead-code-elimination",
+char DeadCodeElimination::ID = 0;
+static RegisterPass<DeadCodeElimination> X(
+	"dead-code-elimination",
     "Eliminates dead code based on Range Analysis (github.com/vhscampos/range-analysis)"
 );
