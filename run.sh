@@ -27,7 +27,10 @@ do
     echo "Running the pass for file $file"
 
     $CLANG_PATH -Xclang -disable-O0-optnone -S -O0 -emit-llvm examples/"$file.cpp" -o examples/"$file.ll"
-    $OPT_PATH -mem2reg examples/"$file.ll" -S -o examples/"$file.ll"
+
+    # First optimization to enable the Range Analysis (otherwise, it will return [-inf, inf] for all the tested ranges)
+    $OPT_PATH -instnamer -mem2reg -break-crit-edges examples/"$file.ll" -S -o examples/"$file.ll"
+
+    # Run the Dead Code Elimination pass
     $OPT_PATH -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -client-ra -disable-output examples/"$file".ll 
-#    $OPT_PATH -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -ra-dead-code-elimination -disable-output examples/"$file".ll 
 done
