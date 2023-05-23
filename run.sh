@@ -12,7 +12,7 @@ echo "Building the LLVM pass..."
 
 make clean
 cmake -DLLVM_INCLUDE_DIRS=$LLVM_INCLUDE_DIRS -G "Unix Makefiles" -B build/ .
-cmake --build build
+cmake --build build -j 4
 
 echo ""
 echo "Compiling examples and running the pass..."
@@ -26,6 +26,8 @@ for file in "${EXAMPLES[@]}"
 do
     echo "Running the pass for file $file"
 
-    $CLANG_PATH -Wno-everything -S -emit-llvm examples/"$file.cpp" -o examples/"$file.ll"
-    $OPT_PATH -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -ra-dead-code-elimination -disable-output examples/"$file".ll 
+    $CLANG_PATH -Xclang -disable-O0-optnone -S -O0 -emit-llvm examples/"$file.cpp" -o examples/"$file.ll"
+    $OPT_PATH -mem2reg examples/"$file.ll" -S -o examples/"$file.ll"
+    $OPT_PATH -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -client-ra -disable-output examples/"$file".ll 
+#    $OPT_PATH -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -ra-dead-code-elimination -disable-output examples/"$file".ll 
 done
