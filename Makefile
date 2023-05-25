@@ -4,4 +4,4 @@ all:
 
 clean:
 	rm -rf build/
-	rm tests/*.ll
+	rm -f tests/*.ll
