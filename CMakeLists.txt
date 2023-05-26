@@ -17,6 +17,5 @@ include_directories(RangeAnalysis)
 add_library (RADeadCodeElimination SHARED
 RangeAnalysis/RangeAnalysis.cpp
 RangeAnalysis/vSSA.cpp
-RangeAnalysis/ClientRA.cpp
 RangeAnalysis/DeadCodeElimination.cpp
 )
