@@ -37,6 +37,6 @@ build/
 *.swp
 .DS_Store
 
-# Bytecodes and .ll files from examples
-examples/*.bc
-examples/*.ll
+# Bytecodes and .ll files from tests
+tests/*.bc
+tests/*.ll
