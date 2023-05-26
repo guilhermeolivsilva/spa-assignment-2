@@ -79,17 +79,16 @@ class DeadCodeElimination : public llvm::FunctionPass {
 			EliminatedBBs = F.size();
 			EliminatedInstructions = 0;
 
-
 			for (BasicBlock &bb : F) {
 				localCmpInstructionEliminatedCode = false;
 				branchInst = dyn_cast<BranchInst>(--(bb.end()));
 
 				if(branchInst && branchInst->isConditional()) {
 					localCmpInstructionEliminatedCode = solveICmpInstruction(branchInst);
-					globalCmpInstructionEliminatedCode |= localCmpInstructionEliminatedCode;
 				}
 
 				if(localCmpInstructionEliminatedCode) {
+					globalCmpInstructionEliminatedCode = true;
 					EliminatedInstructions += bb.size();
 				}
             }
