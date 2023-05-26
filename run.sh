@@ -30,5 +30,5 @@ do
     opt -instnamer -mem2reg -break-crit-edges tests/"$file.ll" -S -o tests/"$file.ll"
 
     # Run the Dead Code Elimination pass
-    opt -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -client-ra -disable-output tests/"$file".ll
+    opt -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -dead-code-elimination tests/"$file".ll
 done
