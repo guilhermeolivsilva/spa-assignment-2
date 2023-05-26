@@ -14,7 +14,7 @@ message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 include_directories(RangeAnalysis)
 
-add_library (RADeadCodeElimination SHARED
+add_library (DeadCodeElimination SHARED
 RangeAnalysis/RangeAnalysis.cpp
 RangeAnalysis/vSSA.cpp
 RangeAnalysis/DeadCodeElimination.cpp
