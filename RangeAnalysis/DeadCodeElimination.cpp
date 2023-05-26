@@ -12,29 +12,58 @@
 
 #include "RangeAnalysis.h"
 
+#define STATS
+#define DEBUG_TYPE "DeadCodeElimination"
+
+STATISTIC(EliminatedBBs, "Total amount of thoroughly eliminated Basic Blocks.");
+STATISTIC(EliminatedInstructions, "Total amount of eliminated individual Instructions.");
+
 using namespace llvm;
 
 namespace {
 class DeadCodeElimination : public llvm::FunctionPass {
 	private:
-		bool solveICmpInstruction(ICmpInst* I) {
+		void eliminateCondition(BranchInst* branchInst, int successor, ICmpInst* condition) {
+			BranchInst* replacementBranch = BranchInst::Create(branchInst->getSuccessor(successor));
+			ReplaceInstWithInst(branchInst, replacementBranch);
+			RecursivelyDeleteTriviallyDeadInstructions(condition);
+		}
+
+		bool solveICmpInstruction(BranchInst* branchInst) {
+			bool codeHasBeenEliminated = false;
+			ICmpInst* I = dyn_cast<ICmpInst>(branchInst->getCondition());
+
 			InterProceduralRA < Cousot >* ra = &getAnalysis < InterProceduralRA < Cousot > >();
 			Range range1 = ra->getRange(I->getOperand(0));
 			Range range2 = ra->getRange(I->getOperand(1));
-            errs() << range1.getLower() << ' ';
-            errs() << range2.getLower() << '\n';
+
 			switch (I->getPredicate()) {
+				// if(x < y)
 				case CmpInst::ICMP_SLT:
 					if (range1.getUpper().slt(range2.getLower())) {
-						errs() << "hello from solveCmpInstruction";
-						llvm::outs() << I << '\n';
+						eliminateCondition(branchInst, 0, I);
+						codeHasBeenEliminated = true;
+					} else if(range1.getLower().sge(range2.getUpper())) {
+						eliminateCondition(branchInst, 1, I);
+						codeHasBeenEliminated = true;
+					}
+					break;
+
+				// if(x > y)
+				case CmpInst::ICMP_SGT:
+					if (range1.getUpper().sle(range2.getLower())) {
+						eliminateCondition(branchInst, 0, I);
+						codeHasBeenEliminated = true;
+					} else if(range1.getLower().sgt(range2.getUpper())) {
+						eliminateCondition(branchInst, 1, I);
+						codeHasBeenEliminated = true;
 					}
 					break;
 				default:
 					break;
 			}
 
-			return true;
+			return codeHasBeenEliminated;
 		}
 
 	public:
@@ -43,21 +72,33 @@ class DeadCodeElimination : public llvm::FunctionPass {
 		~DeadCodeElimination() = default;
 
 		virtual bool runOnFunction(Function &F) {
-			errs() << "hello from runOnFunction\n";
-            llvm::ICmpInst* cmp;
-            for(Function::iterator bb = F.begin(), bbEnd = F.end();
-                bb != bbEnd; ++bb) {
-                for(BasicBlock::iterator I = bb->begin(), IEnd = bb->end(); 
-                    I != IEnd; ++I) {
-                    // if I is a conditional
-                    cmp = llvm::dyn_cast<llvm::ICmpInst>(&*I);
-                    if(cmp) {
-                        solveICmpInstruction(cmp);
-                    } 
-                }
+			BranchInst* branchInst;
+			bool localCmpInstructionEliminatedCode, globalCmpInstructionEliminatedCode;
+			globalCmpInstructionEliminatedCode = false;
+
+			EliminatedBBs = F.size();
+			EliminatedInstructions = 0;
+
+
+			for (BasicBlock &bb : F) {
+				localCmpInstructionEliminatedCode = false;
+				branchInst = dyn_cast<BranchInst>(--(bb.end()));
+
+				if(branchInst && branchInst->isConditional()) {
+					localCmpInstructionEliminatedCode = solveICmpInstruction(branchInst);
+					globalCmpInstructionEliminatedCode |= localCmpInstructionEliminatedCode;
+				}
+
+				if(localCmpInstructionEliminatedCode) {
+					EliminatedInstructions += bb.size();
+				}
             }
 
-			return true;
+			// Eliminate blocks affected by eliminateCondition
+			removeUnreachableBlocks(F);
+			EliminatedBBs -= F.size();
+
+			return globalCmpInstructionEliminatedCode;
 		}
 
 		virtual void getAnalysisUsage(AnalysisUsage &AU) const {
