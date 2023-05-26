@@ -24,11 +24,11 @@ for file in "${TESTS[@]}"
 do
     echo "Running the pass for file $file"
 
-    clang++ -Xclang -disable-O0-optnone -S -O0 -emit-llvm tests/"$file.cpp" -o tests/"$file.ll"
+    clang++ -Xclang -disable-O0-optnone -S -emit-llvm tests/"$file.cpp" -o tests/"$file.ll"
 
     # First optimization to enable the Range Analysis (otherwise, it will return [-inf, inf] for all the tested ranges)
     opt -instnamer -mem2reg -break-crit-edges tests/"$file.ll" -S -o tests/"$file.ll"
 
     # Run the Dead Code Elimination pass
-    opt -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -dead-code-elimination tests/"$file".ll
+    opt -load "build/libRADeadCodeElimination.$LIB_EXTENSION" -vssa -dead-code-elimination -stats tests/"$file".ll -o tests/"$file"_optimized.ll
 done
