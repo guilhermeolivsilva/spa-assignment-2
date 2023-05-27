@@ -18,4 +18,5 @@ add_library (DeadCodeElimination SHARED
 RangeAnalysis/RangeAnalysis.cpp
 RangeAnalysis/vSSA.cpp
 RangeAnalysis/DeadCodeElimination.cpp
+RangeAnalysis/CFGModulePass.cpp
 )
