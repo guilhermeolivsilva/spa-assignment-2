@@ -1,15 +1,15 @@
 set -e
 
 echo "ENVIRONMENT"
-echo "Path to LLVM: $LLVM_PATH"
+echo "Path to LLVM include/: $LLVM_INCLUDE"
+echo "Path to LLVM bin/: $LLVM_BIN"
 echo "Library extension format: $LIB_EXTENSION"
-export LLVM_INCLUDE_DIRS="$LLVM_PATH/include/llvm"
 
 echo ""
 echo "Building the LLVM pass..."
 
 make clean
-cmake -DLLVM_INCLUDE_DIRS=$LLVM_INCLUDE_DIRS -G "Unix Makefiles" -B build/ .
+cmake -DLLVM_INCLUDE_DIRS="$LLVM_INCLUDE/llvm" -G "Unix Makefiles" -B build/ .
 cmake --build build -j 4
 
 echo ""
@@ -24,11 +24,11 @@ for file in "${TESTS[@]}"
 do
     echo "Running the pass for file $file"
 
-    clang++ -Xclang -disable-O0-optnone -S -emit-llvm tests/"$file.cpp" -o tests/"$file.ll"
+    "$LLVM_BIN/clang++" -Xclang -disable-O0-optnone -S -emit-llvm tests/"$file.cpp" -o tests/"$file.ll"
 
     # First optimization to enable the Range Analysis (otherwise, it will return [-inf, inf] for all the tested ranges)
-    opt -instnamer -mem2reg -break-crit-edges tests/"$file.ll" -S -o tests/"$file.ll"
+    "$LLVM_BIN/opt" -instnamer -mem2reg -break-crit-edges tests/"$file.ll" -S -o tests/"$file.ll"
 
     # Run the Dead Code Elimination pass
-    opt -load "build/libDeadCodeElimination.$LIB_EXTENSION" -vssa -dead-code-elimination -stats tests/"$file".ll -o tests/"$file"_optimized.ll
+    "$LLVM_BIN/opt" -load "build/libDeadCodeElimination.$LIB_EXTENSION" -vssa -dead-code-elimination -stats tests/"$file".ll -o tests/"$file"_optimized.ll
 done
