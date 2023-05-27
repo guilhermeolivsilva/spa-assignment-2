@@ -5,6 +5,11 @@ echo "Path to LLVM: $LLVM_PATH"
 echo "Library extension format: $LIB_EXTENSION"
 export LLVM_INCLUDE_DIRS="$LLVM_PATH/include/llvm"
 
+# if clang++ and opt are not set to llvm8, uncomment
+# and edit if necessary
+# alias c++=PATH_TO_c++
+# alias opt=PATH_TO_opt
+
 echo ""
 echo "Building the LLVM pass..."
 
