@@ -1,0 +1,12 @@
+digraph "CFG for '_Z3fooi' function" {
+	label="CFG for '_Z3fooi' function";
+
+	Node0x558c5a878270 [shape=record,label="{entry:\l  %rem = srem i32 %k, 2\l  %tobool = icmp ne i32 %rem, 0\l  br i1 %tobool, label %if.then, label %entry.if.end_crit_edge\l|{<s0>T|<s1>F}}"];
+	Node0x558c5a878270:s0 -> Node0x558c5a878a90;
+	Node0x558c5a878270:s1 -> Node0x558c5a878b30;
+	Node0x558c5a878b30 [shape=record,label="{entry.if.end_crit_edge:                           \l  br label %if.end\l}"];
+	Node0x558c5a878b30 -> Node0x558c5a878cf0;
+	Node0x558c5a878a90 [shape=record,label="{if.then:                                          \l  %inc = add nsw i32 0, 1\l  br label %if.end\l}"];
+	Node0x558c5a878a90 -> Node0x558c5a878cf0;
+	Node0x558c5a878cf0 [shape=record,label="{if.end:                                           \l  %i.0 = phi i32 [ %inc, %if.then ], [ 0, %entry.if.end_crit_edge ]\l  %and = and i32 %i.0, 1\l  ret i32 %and\l}"];
+}

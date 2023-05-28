@@ -1,0 +1,37 @@
+digraph "CFG for '_Z4funcv' function" {
+	label="CFG for '_Z4funcv' function";
+
+	Node0x5584da207620 [shape=record,label="{entry:\l  %add = add nsw i32 0, 10\l  %cmp = icmp slt i32 %add, 5\l  br i1 %cmp, label %if.then, label %if.end6\l|{<s0>T|<s1>F}}"];
+	Node0x5584da207620:s0 -> Node0x5584da207f70;
+	Node0x5584da207620:s1 -> Node0x5584da207fe0;
+	Node0x5584da207f70 [shape=record,label="{if.then:                                          \l  %cmp1 = icmp slt i32 %add, 3\l  br i1 %cmp1, label %if.then2, label %if.end\l|{<s0>T|<s1>F}}"];
+	Node0x5584da207f70:s0 -> Node0x5584da208200;
+	Node0x5584da207f70:s1 -> Node0x5584da208280;
+	Node0x5584da208200 [shape=record,label="{if.then2:                                         \l  br label %return\l}"];
+	Node0x5584da208200 -> Node0x5584da2083e0;
+	Node0x5584da208280 [shape=record,label="{if.end:                                           \l  %cmp3 = icmp sgt i32 %add, 10\l  br i1 %cmp3, label %if.then4, label %if.end5\l|{<s0>T|<s1>F}}"];
+	Node0x5584da208280:s0 -> Node0x5584da208540;
+	Node0x5584da208280:s1 -> Node0x5584da2085c0;
+	Node0x5584da208540 [shape=record,label="{if.then4:                                         \l  br label %return\l}"];
+	Node0x5584da208540 -> Node0x5584da2083e0;
+	Node0x5584da2085c0 [shape=record,label="{if.end5:                                          \l  br label %return\l}"];
+	Node0x5584da2085c0 -> Node0x5584da2083e0;
+	Node0x5584da207fe0 [shape=record,label="{if.end6:                                          \l  %cmp7 = icmp sge i32 %add, 6\l  br i1 %cmp7, label %if.then8, label %if.end15\l|{<s0>T|<s1>F}}"];
+	Node0x5584da207fe0:s0 -> Node0x5584da208980;
+	Node0x5584da207fe0:s1 -> Node0x5584da208a00;
+	Node0x5584da208980 [shape=record,label="{if.then8:                                         \l  %cmp9 = icmp sge i32 %add, 10\l  br i1 %cmp9, label %if.then10, label %if.end11\l|{<s0>T|<s1>F}}"];
+	Node0x5584da208980:s0 -> Node0x5584da208c00;
+	Node0x5584da208980:s1 -> Node0x5584da208c80;
+	Node0x5584da208c00 [shape=record,label="{if.then10:                                        \l  br label %return\l}"];
+	Node0x5584da208c00 -> Node0x5584da2083e0;
+	Node0x5584da208c80 [shape=record,label="{if.end11:                                         \l  %cmp12 = icmp slt i32 %add, 4\l  br i1 %cmp12, label %if.then13, label %if.end14\l|{<s0>T|<s1>F}}"];
+	Node0x5584da208c80:s0 -> Node0x5584da208eb0;
+	Node0x5584da208c80:s1 -> Node0x5584da208f30;
+	Node0x5584da208eb0 [shape=record,label="{if.then13:                                        \l  br label %return\l}"];
+	Node0x5584da208eb0 -> Node0x5584da2083e0;
+	Node0x5584da208f30 [shape=record,label="{if.end14:                                         \l  br label %return\l}"];
+	Node0x5584da208f30 -> Node0x5584da2083e0;
+	Node0x5584da208a00 [shape=record,label="{if.end15:                                         \l  br label %return\l}"];
+	Node0x5584da208a00 -> Node0x5584da2083e0;
+	Node0x5584da2083e0 [shape=record,label="{return:                                           \l  %retval.0 = phi i32 [ 0, %if.then2 ], [ 1, %if.then4 ], [ 4, %if.end5 ], [\l... 2, %if.then10 ], [ 3, %if.then13 ], [ 5, %if.end14 ], [ 6, %if.end15 ]\l  ret i32 %retval.0\l}"];
+}

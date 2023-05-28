@@ -1,0 +1,13 @@
+digraph "CFG for '_Z4funcv' function" {
+	label="CFG for '_Z4funcv' function";
+
+	Node0x556ed1e1a4e0 [shape=record,label="{entry:\l  br label %if.end6\l}"];
+	Node0x556ed1e1a4e0 -> Node0x556ed1e21c30;
+	Node0x556ed1e21c30 [shape=record,label="{if.end6:                                          \l  br label %if.then8\l}"];
+	Node0x556ed1e21c30 -> Node0x556ed1e21c80;
+	Node0x556ed1e21c80 [shape=record,label="{if.then8:                                         \l  br label %if.then10\l}"];
+	Node0x556ed1e21c80 -> Node0x556ed1e21cd0;
+	Node0x556ed1e21cd0 [shape=record,label="{if.then10:                                        \l  br label %return\l}"];
+	Node0x556ed1e21cd0 -> Node0x556ed1e21d20;
+	Node0x556ed1e21d20 [shape=record,label="{return:                                           \l  ret i32 2\l}"];
+}
