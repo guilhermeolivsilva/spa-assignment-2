@@ -18,6 +18,7 @@ echo "Compiling tests and running the pass..."
 TESTS=(
     "test_1"
     "test_2"
+    "test_3"
 )
 
 for file in "${TESTS[@]}"
