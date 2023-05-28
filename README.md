@@ -21,8 +21,9 @@ Tested with
 
 ### Setup environment variables
 
-This project requires three environment variables to be set before running our `run.sh` script. You must set
+This project requires four environment variables to be set before running our `run.sh` script. You must set
 
+* `LLVM_DIR`: path to the llvm build in the machine.
 * `LLVM_INCLUDE`: path to the `include/` directory of your LLVM distribution.
 * `LLVM_BIN`: path to the compiled binaries of your LLVM distribution (i.e., that path that contains `clang++` and `opt`).
 * `LIB_EXTENSION`: set it to `so` if running Linux, or `dylib` if running macOS.
